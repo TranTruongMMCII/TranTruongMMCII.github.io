@@ -16,11 +16,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import tkinter as tk
 from tkinter import filedialog
 import cv2 as cv
-import face_recognition
+# import face_recognition
 import ntpath
-import face_detection
+# import face_detection
 from datetime import datetime
 import numpy as np
+from time import sleep
 
 
 cascPath = os.path.abspath("D:/College/Artificial Intelligence/New folder/Project Face Recognition/lib/haarcascade_frontalface_default.xml")
@@ -193,13 +194,13 @@ class Ui_MainWindow(object):
         for (x, y, w, h) in faces:
             cv.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
         saving_path = savingPath + "\\detect_%s"%path_leaf(file_path)
-        cv.imwrite(saving_path(), img)
-        self.imgOut.setPixmap(saving_path())
-        os.remove(saving_path())
+        cv.imwrite(saving_path, img)
+        self.imgOut.setPixmap(QPixmap(saving_path))
+        os.remove(saving_path)
         
     def save_image(self):
         saving_path = savingPath + "\\detect_%s"%path_leaf(file_path)
-        cv.imwrite(saving_path(), img)
+        cv.imwrite(saving_path, img)
     
     def quit_program(self):
         cv.VideoCapture(0).release()
@@ -219,7 +220,18 @@ class Ui_MainWindow(object):
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     
         # Detect the faces
-        faces = cv.CascadeClassifier(cascPath).detectMultiScale(gray, 1.1, 4)
+        faces = cv.CascadeClassifier(cascPath).detectMultiScale(gray, 1.3, 4)
+        
+        if len(faces) == 0:
+            self.label.setText("Không tìm thấy khuôn mặt!")
+            self.label.setStyleSheet("background-color: blue")
+            # sleep(5)
+            cap.release()
+            # self.label.setText("Phần mềm nhận diện khuôn mặt sử dụng thư viện OpenCV")
+            # self.label.setStyleSheet("background-color: lightgreen")
+            return
+        else:
+            self.label.setText("Phần mềm nhận diện khuôn mặt sử dụng thư viện OpenCV")
     
         # Draw the rectangle around each face
         for (x, y, w, h) in faces:
@@ -234,7 +246,7 @@ class Ui_MainWindow(object):
         saving_path = savingPath + "\\face_detect_" + now.strftime("%d-%m-%y--%H-%M-%S") + ".jpg"
         cv.imwrite(saving_path, img)
         self.imgIn.setPixmap(QPixmap(saving_path))
-        # Release the VideoCapture object
+            # Release the VideoCapture object
         cap.release()
     
     def record_video(self):
@@ -286,7 +298,7 @@ class FaceDetectionWidget(QtWidgets.QWidget):
         gray_image = cv.equalizeHist(gray_image)
 
         faces = self.classifier.detectMultiScale(gray_image,
-                                                 scaleFactor=1.3,
+                                                 scaleFactor=2,
                                                  minNeighbors=4,
                                                  flags=cv.CASCADE_SCALE_IMAGE,
                                                  minSize=self._min_size)

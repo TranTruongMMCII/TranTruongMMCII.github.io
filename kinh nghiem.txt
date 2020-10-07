@@ -1,0 +1,7 @@
+https://github.com/Tencent/FaceDetection-DSFD
+https://docs.opencv.org/master/d1/de5/classcv_1_1CascadeClassifier.html
+Where,
+gray is the input grayscale image.
+scaleFactor is the parameter specifying how much the image size is reduced at each image scale. It is used to create the scale pyramid.
+minNeighbors is a parameter specifying how many neighbors each candidate rectangle should have, to retain it. A higher number gives lower false positives.
+minSize is the minimum rectangle size to be considered a face.
