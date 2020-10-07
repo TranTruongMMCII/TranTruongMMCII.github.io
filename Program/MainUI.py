@@ -193,13 +193,13 @@ class Ui_MainWindow(object):
         for (x, y, w, h) in faces:
             cv.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
         saving_path = savingPath + "\\detect_%s"%path_leaf(file_path)
-        cv.imwrite(saving_path(), img)
-        self.imgOut.setPixmap(saving_path())
-        os.remove(saving_path())
+        cv.imwrite(saving_path, img)
+        self.imgOut.setPixmap(QPixmap(saving_path))
+        os.remove(saving_path)
         
     def save_image(self):
         saving_path = savingPath + "\\detect_%s"%path_leaf(file_path)
-        cv.imwrite(saving_path(), img)
+        cv.imwrite(saving_path, img)
     
     def quit_program(self):
         cv.VideoCapture(0).release()
